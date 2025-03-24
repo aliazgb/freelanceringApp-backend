@@ -26,19 +26,20 @@ function toPersianDigits(n) {
 
 async function setAccessToken(res, user) {
   const cookieOptions = {
-    maxAge: 1000 * 60 * 60 * 24 * 1, // would expire after 1 days
-    httpOnly: true, // The cookie only accessible by the web server
-    signed: true, // Indicates if the cookie should be signed
+    maxAge: 1000 * 60 * 60 * 24 * 1, 
+    httpOnly: true,
+    signed: true,
     sameSite: "None",
-    secure: process.env.NODE_ENV === "development" ? false : true,
-    domain: process.env.DOMAIN,
-    // domain:process.env.NODE_ENV === "development" ? "localhost" : ".fronthooks.ir",
+    secure: true, 
   };
+
   res.cookie(
     "accessToken",
     await generateToken(user, "1d", process.env.ACCESS_TOKEN_SECRET_KEY),
     cookieOptions
   );
+
+  console.log("✅ اکسس توکن ست شد!");
 }
 
 async function setRefreshToken(res, user) {
