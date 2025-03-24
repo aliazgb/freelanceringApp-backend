@@ -30,7 +30,7 @@ class userAuthController extends Controller {
 
     phoneNumber = phoneNumber.trim();
     this.phoneNumber = phoneNumber;
-    this.code = generateRandomNumber(3);
+    this.code = generateRandomNumber(6);
 
 
     const result = await this.saveUser(phoneNumber);
