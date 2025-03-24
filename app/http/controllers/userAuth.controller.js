@@ -32,6 +32,7 @@ class userAuthController extends Controller {
     this.phoneNumber = phoneNumber;
     this.code = generateRandomNumber(6);
 
+
     const result = await this.saveUser(phoneNumber);
     if (!result) throw createError.Unauthorized("ورود شما انجام نشد.");
 
@@ -39,7 +40,7 @@ class userAuthController extends Controller {
       statusCode: HttpStatus.OK,
       data: {
         message: `کد تایید شما برای شماره ${phoneNumber} ارسال گردید `,
-        // otp: this.code, // اضافه کردن OTP در پاسخ
+        otp:this.code,
         expiresIn: CODE_EXPIRES,
         phoneNumber,
       },
