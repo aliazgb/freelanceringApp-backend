@@ -25,12 +25,14 @@ class ProposalController extends Controller {
       { $push: { proposals: proposal._id } }
     );
     if (!proposal?._id)
-      throw createHttpError.InternalServerError("پیشنهاد ثبت نشد");
+      throw createHttpError.InternalServerError(
+        "The proposal was not submitted"
+      );
 
     return res.status(HttpStatus.CREATED).json({
       statusCode: HttpStatus.CREATED,
       data: {
-        message: "پیشنهاد با موفقیت ایجاد شد",
+        message: "The proposal has been successfully created",
       },
     });
   }
@@ -72,9 +74,9 @@ class ProposalController extends Controller {
   }
   async findProposalById(id) {
     if (!mongoose.isValidObjectId(id))
-      throw createHttpError.BadRequest("شناسه پروژه ارسال شده صحیح نمیباشد");
+      throw createHttpError.BadRequest("The submitted project ID is invalid");
     const proposal = await ProposalModel.findById(id);
-    if (!proposal) throw createHttpError.NotFound("پروژه یافت نشد.");
+    if (!proposal) throw createHttpError.NotFound("Project not found.");
     return proposal;
   }
   async changeProposalStatus(req, res) {
@@ -87,7 +89,7 @@ class ProposalController extends Controller {
       { $set: { status } } // 0, 1, 2
     );
     if (!proposal)
-      throw createHttpError.InternalServerError(" وضعیت پروپوزال آپدیت نشد");
+      throw createHttpError.InternalServerError("The proposal status was not updated");
 
     const project = await ProjectModel.findOne({
       proposals: { $in: [proposal._id] },
@@ -102,10 +104,10 @@ class ProposalController extends Controller {
       { $set: { freelancer } }
     );
 
-    let message = "وضعیت پروپوزال تایید شد";
-    if (status === 0) message = "وضعیت پروپوزال به حالت رد شده تغییر یافت";
+    let message = "The proposal status has been approved";
+    if (status === 0) message = "The proposal status has been changed to rejected";
     if (status === 1)
-      message = "وضعیت پروپوزال به حالت در انتظار تایید تغییر یافت";
+      message = "The proposal status has been changed to pending approval";
 
     return res.status(HttpStatus.OK).json({
       statusCode: HttpStatus.OK,

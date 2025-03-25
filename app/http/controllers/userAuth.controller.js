@@ -26,21 +26,20 @@ class userAuthController extends Controller {
     let { phoneNumber } = req.body;
 
     if (!phoneNumber)
-      throw createError.BadRequest("شماره موبایل معتبر را وارد کنید");
+      throw createError.BadRequest("Please enter a valid mobile number");
 
     phoneNumber = phoneNumber.trim();
     this.phoneNumber = phoneNumber;
     this.code = generateRandomNumber(6);
 
-
     const result = await this.saveUser(phoneNumber);
-    if (!result) throw createError.Unauthorized("ورود شما انجام نشد.");
+    if (!result) throw createError.Unauthorized("Your login attempt failed");
 
     return res.status(HttpStatus.OK).json({
       statusCode: HttpStatus.OK,
       data: {
-        message: `کد تایید شما برای شماره ${phoneNumber} ارسال گردید `,
-        otp:this.code,
+        message: `Your verification code has been sent to the number ${phoneNumber}`,
+        otp: this.code,
         expiresIn: CODE_EXPIRES,
         phoneNumber,
       },
@@ -55,22 +54,22 @@ class userAuthController extends Controller {
       { password: 0, refreshToken: 0, accessToken: 0 }
     );
 
-    if (!user) throw createError.NotFound("کاربری با این مشخصات یافت نشد");
+    if (!user) throw createError.NotFound("User with these details not found");
 
     if (user.otp.code != code)
-      throw createError.BadRequest("کد ارسال شده صحیح نمیباشد");
+      throw createError.BadRequest("The sent code is invalid");
 
     if (new Date(`${user.otp.expiresIn}`).getTime() < Date.now())
-      throw createError.BadRequest("کد اعتبار سنجی منقضی شده است");
+      throw createError.BadRequest("The verification code has expired");
 
     user.isVerifiedPhoneNumber = true;
     await user.save();
 
     await setAccessToken(res, user);
     await setRefreshToken(res, user);
-    let WELLCOME_MESSAGE = `کد تایید شد، به فرانت هوکس خوش آمدید`;
+    let WELLCOME_MESSAGE = `Code verified, welcome`;
     if (!user.isActive)
-      WELLCOME_MESSAGE = `کد تایید شد، لطفا اطلاعات خود را تکمیل کنید`;
+      WELLCOME_MESSAGE = `Code verified, please complete your information`;
 
     return res.status(HttpStatus.OK).json({
       statusCode: HttpStatus.OK,
@@ -115,12 +114,12 @@ class userAuthController extends Controller {
     const { name, email, role } = req.body;
 
     if (!user.isVerifiedPhoneNumber)
-      throw createError.Forbidden("شماره موبایل خود را تایید کنید.");
+      throw createError.Forbidden("Please verify your mobile number.");
 
     const duplicateUser = await UserModel.findOne({ email });
     if (duplicateUser)
       throw createError.BadRequest(
-        "کاربری با این ایمیل قبلا ثبت نام کرده است."
+        "User with this email is already registered."
       );
 
     const updatedUser = await UserModel.findOneAndUpdate(
@@ -134,7 +133,7 @@ class userAuthController extends Controller {
     return res.status(HttpStatus.OK).send({
       statusCode: HttpStatus.OK,
       data: {
-        message: "اطلاعات شما با موفقیت تکمیل شد",
+        message: "Your information has been successfully completed",
         user: updatedUser,
       },
     });
@@ -151,11 +150,11 @@ class userAuthController extends Controller {
       }
     );
     if (!updateResult.modifiedCount === 0)
-      throw createError.BadRequest("اطلاعات ویرایش نشد");
+      throw createError.BadRequest("Information was not edited");
     return res.status(HttpStatus.OK).json({
       statusCode: HttpStatus.OK,
       data: {
-        message: "اطلاعات با موفقیت آپدیت شد",
+        message: "Information was successfully updated"
       },
     });
   }

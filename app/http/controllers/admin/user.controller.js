@@ -62,12 +62,12 @@ class UserController extends Controller {
     );
 
     if (updateResult.modifiedCount === 0)
-      throw createHttpError.InternalServerError(" وضعیت کاربر آپدیت نشد");
+      throw createHttpError.InternalServerError("User status was not updated");
 
     let message = "وضعیت کاربر تایید شد";
-    if (status === 0) message = "وضعیت کاربر به حالت رد شده تغییر یافت";
+    if (status === 0) message = "The user status has been changed to rejected";
     if (status === 1)
-      message = "وضعیت کاربر به حالت در انتظار تایید تغییر یافت";
+      message = "The user status has been changed to pending approval";
 
     return res.status(HttpStatus.OK).json({
       statusCode: HttpStatus.OK,

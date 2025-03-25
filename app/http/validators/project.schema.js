@@ -7,24 +7,22 @@ const addProjectSchema = Joi.object({
     .required()
     .min(3)
     .max(30)
-    .error(createError.BadRequest("عنوان محصول صحیح نمیباشد")),
+    .error(createError.BadRequest("Invalid product title")),
   description: Joi.string()
     .required()
-    .error(createError.BadRequest("توضیحات ارسال شده صحیح نمیباشد")),
+    .error(createError.BadRequest("Invalid product title")),
   tags: Joi.array()
     .min(0)
     .max(20)
-    .error(createError.BadRequest("برچسب ها نمیتواند بیشتر از 20 ایتم باشد")),
+    .error(createError.BadRequest("Tags cannot exceed 20 items")),
   category: Joi.string()
     .required()
     .regex(MongoIDPattern)
-    .error(createError.BadRequest("دسته بندی مورد نظر  صحیح نمی باشد")),
-  budget: Joi.number().error(
-    createError.BadRequest("قیمت وارد شده صحیح نمیباشد")
-  ),
+    .error(createError.BadRequest("Invalid category selection")),
+  budget: Joi.number().error(createError.BadRequest("Invalid price input")),
   deadline: Joi.date()
     .required()
-    .error(createError.BadRequest("ددلاین پروژه را وارد کنید")),
+    .error(createError.BadRequest("Please enter the project deadline")),
 });
 
 module.exports = {

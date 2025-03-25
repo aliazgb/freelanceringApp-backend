@@ -25,12 +25,12 @@ class ProjectController extends Controller {
     });
 
     if (!project?._id)
-      throw createHttpError.InternalServerError("پروژه ثبت نشد");
+      throw createHttpError.InternalServerError("Project was not registered");
 
     return res.status(HttpStatus.CREATED).json({
       statusCode: HttpStatus.CREATED,
       data: {
-        message: "پروژه با موفقیت ایجاد شد",
+        message: "Project was successfully created",
         project,
       },
     });
@@ -170,9 +170,9 @@ class ProjectController extends Controller {
   }
   async findProjectById(id) {
     if (!mongoose.isValidObjectId(id))
-      throw createHttpError.BadRequest("شناسه پروژ ارسال شده صحیح نمیباشد");
+      throw createHttpError.BadRequest("The project ID provided is invalid");
     const project = await ProjectModel.findById(id);
-    if (!project) throw createHttpError.NotFound("پروژه یافت نشد.");
+    if (!project) throw createHttpError.NotFound("Project not found.");
     return project;
   }
   async changeProjectStatus(req, res) {
@@ -185,10 +185,10 @@ class ProjectController extends Controller {
     );
 
     if (updateResult.modifiedCount === 0)
-      throw createHttpError.InternalServerError(" وضعیت پروپوزال آپدیت نشد");
+      throw createHttpError.InternalServerError("Proposal status was not updated");
 
-    let message = "پروژه بسته شد";
-    if (status === "OPEN") message = "وضعیت پروژه به حالت باز تغییر یافت";
+    let message = "The project has been closed";
+    if (status === "OPEN") message = "The project status has been changed to open";
 
     return res.status(HttpStatus.OK).json({
       statusCode: HttpStatus.OK,
@@ -202,14 +202,14 @@ class ProjectController extends Controller {
     const project = await this.findProjectById(id);
 
     if (project.freelancer)
-      throw createHttpError.BadRequest("پروژه قابل حذف نیست");
+      throw createHttpError.BadRequest("The project cannot be deleted");
 
     const result = await ProjectModel.deleteOne({ _id: id });
     if (result.deletedCount)
       return res.status(HttpStatus.OK).json({
         statusCode: HttpStatus.OK,
         data: {
-          message: "پروژه با موفقیت حذف شد",
+          message: "The project has been successfully deleted"
         },
       });
   }
@@ -226,11 +226,11 @@ class ProjectController extends Controller {
       }
     );
     if (updateResult.modifiedCount == 0)
-      throw createError.InternalServerError("به روزرسانی انجام نشد");
+      throw createError.InternalServerError("Update failed");
     return res.status(HttpStatus.OK).json({
       statusCode: HttpStatus.OK,
       data: {
-        message: "به روز رسانی با موفقیت انجام شد",
+        message: "Update was successfully completed"
       },
     });
   }

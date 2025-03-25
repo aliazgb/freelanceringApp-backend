@@ -7,53 +7,52 @@ const addCategorySchema = Joi.object({
     .required()
     .min(3)
     .max(100)
-    .error(createHttpError.BadRequest("عنوان فارسی دسته بندی صحیح نمیباشد")),
+    .error(createHttpError.BadRequest("The Persian category title is invalid")),
+
   englishTitle: Joi.string()
     .required()
     .min(3)
     .max(100)
-    .error(
-      createHttpError.BadRequest("عنوان انگلیسی دسته بندی صیحیح نمی باشد")
-    ),
+    .error(createHttpError.BadRequest("The English category title is invalid")),
   description: Joi.string()
     .required()
     .min(3)
     .max(200)
-    .error(createHttpError.BadRequest("توضیحات دسته بندی صحیح نمی باشد")),
+    .error(createHttpError.BadRequest("The category description is invalid")),
   type: Joi.string()
     .required()
     .min(3)
     .max(100)
     .valid("project", "post", "comment", "ticket")
-    .error(createHttpError.BadRequest("نوع دسته بندی صحیح نمی باشد")),
+    .error(createHttpError.BadRequest("The category type is invalid")),
   parent: Joi.string()
     .allow("")
     .pattern(MongoIDPattern)
-    .error(createHttpError.BadRequest("شناسه ارسال شده صحیح نمیباشد")),
+    .error(createHttpError.BadRequest("The submitted ID is invalid")),
 });
 
 const updateCategorySchema = Joi.object({
   title: Joi.string()
     .min(3)
     .max(100)
-    .error(createHttpError.BadRequest("عنوان فارسی دسته بندی صحیح نمیباشد")),
+    .error(createHttpError.BadRequest("The Persian category title is invalid")),
   englishTitle: Joi.string()
     .min(3)
     .max(100)
-    .error(
-      createHttpError.BadRequest("عنوان انگلیسی دسته بندی صیحیح نمی باشد")
-    ),
+    .error(createHttpError.BadRequest("The English category title is invalid")),
   description: Joi.string()
     .required()
     .min(3)
     .max(200)
-    .error(createHttpError.BadRequest("توضیحات دسته بندی صحیح نمی باشد")),
+    .error(
+      createHttpError.BadRequest("The category description is not correct")
+    ),
   type: Joi.string()
     .required()
     .min(3)
     .max(100)
     .valid("product", "post", "comment", "ticket")
-    .error(createHttpError.BadRequest("نوع دسته بندی صحیح نمی باشد")),
+    .error(createHttpError.BadRequest("Category type is not correct")),
 });
 
 module.exports = {

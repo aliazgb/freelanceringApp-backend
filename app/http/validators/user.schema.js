@@ -38,19 +38,20 @@ const updateProfileSchema = Joi.object({
     .min(5)
     .max(50)
     .required()
-    .error(createHttpError.BadRequest("نام کاربری وارد شده صحیح نمی باشد")),
+    .error(createHttpError.BadRequest("Invalid username entered")),
   email: Joi.string()
     .required()
     .email()
-    .error(createHttpError.BadRequest("ایمیل وارد شده صحیح نمی باشد")),
-  phoneNumber: Joi.string()
-    .length(11)
-    .pattern(/^09[0-9]{9}$/)
-    .error(createHttpError.BadRequest("شماره موبایل وارد شده صحیح نمیباشد")),
+    .error(createHttpError.BadRequest("Invalid email entered")),
+    phoneNumber: Joi.string()
+    .pattern(/^(\+49|0)[1-9][0-9]{9,10}$/)  
+    .pattern(/^(\+98|0)[1-9][0-9]{9,10}$/)  
+    .error(createHttpError.BadRequest("Invalid phone number entered")),
+  
   biography: Joi.string()
     .max(30)
     .allow("")
-    .error(createHttpError.BadRequest("حوزه تخصصی صحیح نمی باشد.")),
+    .error(createHttpError.BadRequest("Invalid expertise area")),
 });
 
 module.exports = {
