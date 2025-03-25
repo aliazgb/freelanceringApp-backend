@@ -46,7 +46,7 @@ const updateProfileSchema = Joi.object({
     phoneNumber: Joi.string()
     .pattern(/^(\+49|0)[1-9][0-9]{9}$/)  
     .pattern(/^(\+98|0)[1-9][0-9]{9}$/)  
-    .error(createHttpError.BadRequest("Invalid phone number entered"))
+    .error(createHttpError.BadRequest("Invalid phone number entered")),
   
   
   biography: Joi.string()
