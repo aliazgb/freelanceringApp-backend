@@ -11,13 +11,17 @@ function secretKeyGenerator() {
 }
 
 function generateRandomNumber(length) {
+  if (length === 3) {
+    return Math.floor(100 + Math.random() * 900); 
+  }
   if (length === 5) {
-    return Math.floor(10000 + Math.random() * 90000);
+    return Math.floor(10000 + Math.random() * 90000); 
   }
   if (length === 6) {
-    return Math.floor(100000 + Math.random() * 900000);
+    return Math.floor(100000 + Math.random() * 900000); 
   }
 }
+
 
 function toPersianDigits(n) {
   const farsiDigits = ["۰", "۱", "۲", "۳", "۴", "۵", "۶", "۷", "۸", "۹"];
