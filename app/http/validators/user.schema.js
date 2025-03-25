@@ -3,8 +3,7 @@ const createHttpError = require("http-errors");
 
 const getOtpSchema = Joi.object({
   phoneNumber: Joi.string()
-    .length(11)
-    .pattern(/^09[0-9]{9}$/)
+    .pattern(/^(0|(\+98|\+49))[1-9][0-9]{9,10}$/)  // ترکیب برای پشتیبانی از 0، +98، +49
     .error(createHttpError.BadRequest("شماره موبایل وارد شده صحیح نمیباشد")),
 });
 
@@ -14,8 +13,7 @@ const checkOtpSchema = Joi.object({
     .max(6)
     .error(createHttpError.BadRequest("کد ارسال شده صحیح نمیباشد")),
   phoneNumber: Joi.string()
-    .length(11)
-    .pattern(/^09[0-9]{9}$/)
+    .pattern(/^(0|(\+98|\+49))[1-9][0-9]{9,10}$/)  // ترکیب برای پشتیبانی از 0، +98، +49
     .error(createHttpError.BadRequest("شماره موبایل وارد شده صحیح نمیباشد")),
 });
 
@@ -44,9 +42,8 @@ const updateProfileSchema = Joi.object({
     .email()
     .error(createHttpError.BadRequest("Invalid email entered")),
   phoneNumber: Joi.string()
-    .pattern(/^0[1-9][0-9]{9,10}$/)
+    .pattern(/^(0|(\+98|\+49))[1-9][0-9]{9,10}$/)  // ترکیب برای پشتیبانی از 0، +98، +49
     .error(createHttpError.BadRequest("Invalid phone number entered")),
-
   biography: Joi.string()
     .max(30)
     .allow("")

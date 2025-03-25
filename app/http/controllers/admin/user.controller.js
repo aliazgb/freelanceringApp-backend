@@ -64,7 +64,7 @@ class UserController extends Controller {
     if (updateResult.modifiedCount === 0)
       throw createHttpError.InternalServerError("User status was not updated");
 
-    let message = "وضعیت کاربر تایید شد";
+    let message = "The user's status has been confirmed";
     if (status === 0) message = "The user status has been changed to rejected";
     if (status === 1)
       message = "The user status has been changed to pending approval";
