@@ -61,8 +61,34 @@ function decideAuthMiddleware(req, res, next) {
   next();
 }
 
+function setAccessToken(res, user) {
+  const accessToken = JWT.sign({ _id: user._id }, process.env.ACCESS_TOKEN_SECRET_KEY, { expiresIn: '1h' });
+
+  res.cookie("accessToken", accessToken, {
+    httpOnly: true,
+    signed: true,
+    secure: true, // only send the cookie over HTTPS
+    sameSite: "None", // important for cross-origin requests
+    maxAge: 60 * 60 * 1000, // 1 hour expiration time
+  });
+}
+
+function setRefreshToken(res, user) {
+  const refreshToken = JWT.sign({ _id: user._id }, process.env.REFRESH_TOKEN_SECRET_KEY, { expiresIn: '7d' });
+
+  res.cookie("refreshToken", refreshToken, {
+    httpOnly: true,
+    signed: true,
+    secure: true, // only send the cookie over HTTPS
+    sameSite: "None", // important for cross-origin requests
+    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days expiration time
+  });
+}
+
 module.exports = {
   verifyAccessToken,
   decideAuthMiddleware,
   isVerifiedUser,
+  setAccessToken,
+  setRefreshToken,
 };
