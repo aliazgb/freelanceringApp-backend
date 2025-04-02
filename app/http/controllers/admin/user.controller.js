@@ -4,9 +4,9 @@ const Controller = require("../controller");
 const { StatusCodes: HttpStatus } = require("http-status-codes");
 const { ProjectModel } = require("../../../models/project");
 const { ProposalModel } = require("../../../models/proposal");
+const { Types } = require("mongoose");
 
 class UserController extends Controller {
-  // ADMIN ROUTES :
   async getAllUsers(req, res) {
     let { page, limit } = req.query;
     page = page || 1;
@@ -14,8 +14,7 @@ class UserController extends Controller {
     const skip = (page - 1) * limit;
     const { search } = req.query;
     const searchTerm = new RegExp(search, "ig");
-    // const databaseQuery = {};
-    // if (search) databaseQuery["$text"] = { $search: search };
+
     const users = await UserModel.find({
       $or: [
         { name: searchTerm },
@@ -25,16 +24,14 @@ class UserController extends Controller {
     })
       .limit(limit)
       .skip(skip)
-      .sort({
-        createdAt: -1,
-      });
+      .sort({ createdAt: -1 });
+
     return res.status(HttpStatus.OK).json({
       statusCode: HttpStatus.OK,
-      data: {
-        users,
-      },
+      data: { users },
     });
   }
+
   async userProfile(req, res) {
     const { userId } = req.params;
     const user = await UserModel.findById(userId, { otp: 0 });
@@ -44,18 +41,29 @@ class UserController extends Controller {
 
     return res.status(HttpStatus.OK).json({
       statusCode: HttpStatus.OK,
-      data: {
-        user,
-        createdProjects,
-        completedProjects,
-        proposals,
-      },
+      data: { user, createdProjects, completedProjects, proposals },
     });
   }
+
   async verifyUser(req, res) {
     const { userId } = req.params;
     let { status } = req.body;
     status = Number(status);
+
+    const protectedUsers = [
+      new Types.ObjectId("67e6dd6725f8a19c8d3acd21"),
+      new Types.ObjectId("67e9b59518ed0d0376d961f7"),
+      new Types.ObjectId("67e9b91318ed0d0376d9633b"),
+    ];
+
+    if (protectedUsers.some((id) => id.equals(userId))) {
+      return res.status(HttpStatus.FORBIDDEN).json({
+        statusCode: HttpStatus.FORBIDDEN,
+        message:
+          "🚫 You are not allowed to change the status of test roles!🚫 ",
+      });
+    }
+
     const updateResult = await UserModel.updateOne(
       { _id: userId },
       { $set: { status } }
@@ -71,9 +79,7 @@ class UserController extends Controller {
 
     return res.status(HttpStatus.OK).json({
       statusCode: HttpStatus.OK,
-      data: {
-        message,
-      },
+      data: { message },
     });
   }
 }
