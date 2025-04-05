@@ -8,7 +8,7 @@ const {
 } = require("../../../utils/functions");
 const createError = require("http-errors");
 const { UserModel } = require("../../models/user");
-const CODE_EXPIRES = 90 * 1000; //90 seconds in milliseconds
+const CODE_EXPIRES = 90 * 1000; 
 const { StatusCodes: HttpStatus } = require("http-status-codes");
 const {
   completeProfileSchema,

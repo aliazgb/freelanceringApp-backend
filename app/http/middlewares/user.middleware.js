@@ -57,7 +57,6 @@ function decideAuthMiddleware(req, res, next) {
   if (accessToken) {
     return verifyAccessToken(req, res, next);
   }
-  // skip this middleware
   next();
 }
 
@@ -67,9 +66,9 @@ function setAccessToken(res, user) {
   res.cookie("accessToken", accessToken, {
     httpOnly: true,
     signed: true,
-    secure: true, // only send the cookie over HTTPS
-    sameSite: "None", // important for cross-origin requests
-    maxAge: 60 * 60 * 1000, // 1 hour expiration time
+    secure: true, 
+    sameSite: "None", 
+    maxAge: 60 * 60 * 1000, 
   });
 }
 
@@ -79,9 +78,9 @@ function setRefreshToken(res, user) {
   res.cookie("refreshToken", refreshToken, {
     httpOnly: true,
     signed: true,
-    secure: true, // only send the cookie over HTTPS
-    sameSite: "None", // important for cross-origin requests
-    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days expiration time
+    secure: true, 
+    sameSite: "None", 
+    maxAge: 7 * 24 * 60 * 60 * 1000, 
   });
 }
 
